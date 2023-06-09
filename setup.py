@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'zr30camera'
+package_name = 'siyi-camera-controller'
 
 setup(
     name=package_name,
@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'zoom = siyi-camera-controller.zoom:main'
         ],
     },
 )

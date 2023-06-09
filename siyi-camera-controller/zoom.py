@@ -3,6 +3,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32
 from siyi_sdk import SIYISDK
+from time import sleep
 
 _GET_ZOOM_TOPIC = "ZR30/get_zoom_level"
 _SET_ZOOM_TOPIC = "ZR30/set_zoom_level"
@@ -52,11 +53,39 @@ class ZoomNode(Node):
         self.awesome_set_zoom_function(val)
         self.get_logger().info(f"Zoom level set to {val}.")
 
-    def awesome_set_zoom_function(zoom_level: float) -> None:
-        print("Im awesome!")
+    def awesome_set_zoom_function(self, zoom):
+        """
+        Will zoom in or out on the camera and return the zoom level.
+        Zoom level: min = 1.0, max = 30.0
+
+        Args:
+            zoom: whether to zoom in (zoom = 1) or zoom out (zoom = 0)
+        """
+        cam_zoom = float(self.camera.getZoomLevel())
+        print("Initial zoom level", cam_zoom)
+
+        if zoom == 1:
+            print("Zooming in")        
+            val = self.camera.requestZoomIn()
+            sleep(1)
+        elif zoom == -1:
+            print("Zooming out")
+            val = self.camera.requestZoomOut()
+            sleep(1)
+        else:
+            print("Wrong input to zoom. Input 1 or -1.")
+            pass
+
+        val = self.camera.requestZoomHold()
+        sleep(1)
+        cam_zoom = float(self.camera.getZoomLevel())
+        sleep(1)
+
+        print("Achieved zoom level: ", cam_zoom)
+        return cam_zoom #let's figure out where/how we want this info
 
 
-def run(args=None):
+def main(args=None):
     camera = SIYISDK(server_ip="192.168.144.25", port=37260)
     camera.connect()
 
@@ -67,4 +96,4 @@ def run(args=None):
     rclpy.shutdown()
 
 if __name__ == "__main__":
-    run()
+    main()

@@ -2,7 +2,7 @@ import rclpy
 
 from rclpy.node import Node
 from geometry_msgs.msg import Vector3Stamped
-from siyi_sdk import SIYISDK
+from siyi_sdk.siyi_sdk import SIYISDK
 
 _GIMBAL_GET_ATTITUTE_TOPIC = "get_gimbal_attitude"
 _GIMBAL_SET_ATTITUDE_TOPIC = "set_gimbal_attitude"
@@ -19,14 +19,14 @@ class GimbalNode(Node):
         self.camera = camera
         
         # define attitude publish topic
-        self.publisher = self.create_publisher(Vector3Stamped, _GIMBAL_GET_ATTITUTE_TOPIC, _QUEUE_SIZE)
+        self.publisher_ = self.create_publisher(Vector3Stamped, _GIMBAL_GET_ATTITUTE_TOPIC, _QUEUE_SIZE)
 
         # define set attitude command topic
-        self.subscriber = self.create_subscription(Vector3Stamped, _GIMBAL_SET_ATTITUDE_TOPIC, self.subscribe_callback, 10)
+        self.subscriber_ = self.create_subscription(Vector3Stamped, _GIMBAL_SET_ATTITUDE_TOPIC, self.subscribe_callback, 10)
 
         # define publishing frequency and callback function
         self.timer_ = self.create_timer(pub_period, self.get_attitude_callback)
-        self.count = 0
+        self.i = 0
 
     def get_attitude_callback(self) -> None:
         """
@@ -41,9 +41,9 @@ class GimbalNode(Node):
         msg.header.stamp = Node.get_clock(self).now().to_msg()
         msg.header.frame_id = _GIMBAL_FRAME_ID
 
-        self.publisher.publish(msg)
-        self.get_logger().info(f"Gimbal data packet {self.count} published.")
-        self.count += 1
+        self.publisher_.publish(msg)
+        self.get_logger().info(f"Gimbal data packet {self.i} published.")
+        self.i += 1
 
     def set_attitude_callback(self, msg: Vector3Stamped) -> None:
         """
@@ -61,7 +61,7 @@ class GimbalNode(Node):
         self.get_logger().info(f"Gimbal attitude set to ({pitch}, {yaw}) (pitch, yaw).")
 
 
-def run(args=None):
+def main(args=None):
     camera = SIYISDK(server_ip=_ZR30_SERVER_IP, port=_ZR30_SERVER_PORT)
     camera.connect()
 
@@ -72,4 +72,4 @@ def run(args=None):
     rclpy.shutdown()
 
 if __name__ == "__main__":
-    run()
+    main()

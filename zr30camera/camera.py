@@ -43,7 +43,7 @@ class CameraNode(Node):
         self.get_logger().info(f"Zoom data packet {self.count} published.")
         self.count += 1
 
-def run(args=None):
+def main(args=None):
     capture = cv2.VideoCapture(_CAM_STREAM_URI)
 
     rclpy.init(args=args)
@@ -56,4 +56,4 @@ def run(args=None):
     capture.release()
 
 if __name__ == "__main__":
-    run()
+    main()

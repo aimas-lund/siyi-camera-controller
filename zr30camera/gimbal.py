@@ -2,7 +2,7 @@ import rclpy
 
 from rclpy.node import Node
 from geometry_msgs.msg import Vector3Stamped
-from siyi_sdk.siyi_sdk import SIYISDK
+from sdk.siyi_sdk import SIYISDK
 
 _GIMBAL_GET_ATTITUTE_TOPIC = "get_gimbal_attitude"
 _GIMBAL_SET_ATTITUDE_TOPIC = "set_gimbal_attitude"
@@ -66,7 +66,7 @@ def main(args=None):
     camera.connect()
 
     rclpy.init(args=args)
-    node = GimbalNode()
+    node = GimbalNode(camera=camera)
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()

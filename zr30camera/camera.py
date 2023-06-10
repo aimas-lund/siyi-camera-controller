@@ -47,7 +47,7 @@ def main(args=None):
     capture = cv2.VideoCapture(_CAM_STREAM_URI)
 
     rclpy.init(args=args)
-    camera_publisher = CameraNode(capture)
+    camera_publisher = CameraNode(capture=capture)
 
     rclpy.spin(camera_publisher)
 

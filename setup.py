@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 package_name = 'zr30camera'
-library_name = 'siyi_sdk'
+library_name = 'sdk'
 
 setup(
     name=package_name,

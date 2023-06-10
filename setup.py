@@ -1,4 +1,6 @@
-from setuptools import find_packages, setup
+import os
+from glob import glob
+from setuptools import  setup
 
 package_name = 'zr30camera'
 library_name = 'sdk'
@@ -11,6 +13,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*')))
     ],
     package_data={package_name: ['siyi_sdk/*']},
     install_requires=['setuptools'],

@@ -15,7 +15,7 @@ _PUBLISH_PERIOD_SEC = 0.001
 
 class CameraNode(Node):
     def __init__(self, capture: cv2.VideoCapture, node_name: str =_CAM_NODE_NAME, pub_period: float=_PUBLISH_PERIOD_SEC) -> None:
-        super.__init__(node_name)
+        super().__init__(node_name)
         self.capture = capture
         self.bridge = CvBridge()
         

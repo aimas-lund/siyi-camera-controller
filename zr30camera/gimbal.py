@@ -15,14 +15,14 @@ _QUEUE_SIZE = 100
 
 class GimbalNode(Node):
     def __init__(self, camera: SIYISDK, node_name: str =_GIMBAL_NODE_NAME, pub_period: float=_PUBLISH_PERIOD_SEC) -> None:
-        super.__init__(node_name)
+        super().__init__(node_name)
         self.camera = camera
         
         # define attitude publish topic
         self.publisher_ = self.create_publisher(Vector3Stamped, _GIMBAL_GET_ATTITUTE_TOPIC, _QUEUE_SIZE)
 
         # define set attitude command topic
-        self.subscriber_ = self.create_subscription(Vector3Stamped, _GIMBAL_SET_ATTITUDE_TOPIC, self.subscribe_callback, 10)
+        self.subscriber_ = self.create_subscription(Vector3Stamped, _GIMBAL_SET_ATTITUDE_TOPIC, self.set_attitude_callback, 10)
 
         # define publishing frequency and callback function
         self.timer_ = self.create_timer(pub_period, self.get_attitude_callback)

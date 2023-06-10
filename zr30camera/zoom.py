@@ -15,14 +15,14 @@ _QUEUE_SIZE = 100
 
 class ZoomNode(Node):
     def __init__(self, camera: SIYISDK, node_name: str =_ZOOM_NODE_NAME, pub_period: float=_PUBLISH_PERIOD_SEC) -> None:
-        super.__init__(node_name)
+        super().__init__(node_name)
         self.camera = camera
         
         # define zoom level publish topic
         self.publisher_ = self.create_publisher(Float32, _GET_ZOOM_TOPIC, _QUEUE_SIZE)
 
         # define set zoom level command topic
-        self.subscriber_ = self.create_subscription(Float32, _SET_ZOOM_TOPIC, self.subscribe_callback, 10)
+        self.subscriber_ = self.create_subscription(Float32, _SET_ZOOM_TOPIC, self.set_zoom_callback, 10)
 
         # define publishing frequency and callback function
         self.timer_ = self.create_timer(pub_period, self.get_zoom_callback)
@@ -34,9 +34,7 @@ class ZoomNode(Node):
         """
         msg = Float32()
 
-        msg.data = self.camera.getZoomLevel()
-        msg.header.stamp = Node.get_clock(self).now().to_msg()
-        msg.header.frame_id = _GIMBAL_FRAME_ID
+        msg.data = float(self.camera.getZoomLevel())
 
         self.publisher_.publish(msg)
         self.get_logger().info(f"Zoom data packet {self.i} published.")

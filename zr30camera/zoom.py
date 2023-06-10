@@ -2,29 +2,31 @@ import rclpy
 
 from rclpy.node import Node
 from std_msgs.msg import Float32
-from siyi_sdk import SIYISDK
+from sdk.siyi_sdk import SIYISDK
 
 _GET_ZOOM_TOPIC = "ZR30/get_zoom_level"
 _SET_ZOOM_TOPIC = "ZR30/set_zoom_level"
 _ZOOM_NODE_NAME = "zoom_node"
 _GIMBAL_FRAME_ID = "ZR30_Camera_Zoomer"
+_ZR30_SERVER_IP = "192.168.144.25"
+_ZR30_SERVER_PORT = 37260
 _PUBLISH_PERIOD_SEC = 0.05
 _QUEUE_SIZE = 100
 
 class ZoomNode(Node):
     def __init__(self, camera: SIYISDK, node_name: str =_ZOOM_NODE_NAME, pub_period: float=_PUBLISH_PERIOD_SEC) -> None:
-        super.__init__(node_name)
+        super().__init__(node_name)
         self.camera = camera
         
         # define zoom level publish topic
-        self.publisher = self.create_publisher(Float32, _GET_ZOOM_TOPIC, _QUEUE_SIZE)
+        self.publisher_ = self.create_publisher(Float32, _GET_ZOOM_TOPIC, _QUEUE_SIZE)
 
         # define set zoom level command topic
-        self.subscriber = self.create_subscription(Float32, _SET_ZOOM_TOPIC, self.subscribe_callback, 10)
+        self.subscriber_ = self.create_subscription(Float32, _SET_ZOOM_TOPIC, self.set_zoom_callback, 10)
 
         # define publishing frequency and callback function
         self.timer_ = self.create_timer(pub_period, self.get_zoom_callback)
-        self.count = 0
+        self.i = 0
 
     def get_zoom_callback(self) -> None:
         """
@@ -32,13 +34,11 @@ class ZoomNode(Node):
         """
         msg = Float32()
 
-        msg.data = self.camera.getZoomLevel()
-        msg.header.stamp = Node.get_clock(self).now().to_msg()
-        msg.header.frame_id = _GIMBAL_FRAME_ID
+        msg.data = float(self.camera.getZoomLevel())
 
-        self.publisher.publish(msg)
-        self.get_logger().info(f"Zoom data packet {self.count} published.")
-        self.count += 1
+        self.publisher_.publish(msg)
+        self.get_logger().info(f"Zoom data packet {self.i} published.")
+        self.i += 1
 
     def set_zoom_callback(self, msg: Float32) -> None:
         """
@@ -56,15 +56,15 @@ class ZoomNode(Node):
         print("Im awesome!")
 
 
-def run(args=None):
-    camera = SIYISDK(server_ip="192.168.144.25", port=37260)
+def main(args=None):
+    camera = SIYISDK(server_ip=_ZR30_SERVER_IP, port=_ZR30_SERVER_PORT)
     camera.connect()
 
     rclpy.init(args=args)
-    node = ZoomNode()
+    node = ZoomNode(camera=camera)
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
 
 if __name__ == "__main__":
-    run()
+    main()

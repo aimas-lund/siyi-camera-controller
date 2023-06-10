@@ -15,7 +15,7 @@ _PUBLISH_PERIOD_SEC = 0.001
 
 class CameraNode(Node):
     def __init__(self, capture: cv2.VideoCapture, node_name: str =_CAM_NODE_NAME, pub_period: float=_PUBLISH_PERIOD_SEC) -> None:
-        super.__init__(node_name)
+        super().__init__(node_name)
         self.capture = capture
         self.bridge = CvBridge()
         
@@ -43,11 +43,11 @@ class CameraNode(Node):
         self.get_logger().info(f"Zoom data packet {self.count} published.")
         self.count += 1
 
-def run(args=None):
+def main(args=None):
     capture = cv2.VideoCapture(_CAM_STREAM_URI)
 
     rclpy.init(args=args)
-    camera_publisher = CameraNode(capture)
+    camera_publisher = CameraNode(capture=capture)
 
     rclpy.spin(camera_publisher)
 
@@ -56,4 +56,4 @@ def run(args=None):
     capture.release()
 
 if __name__ == "__main__":
-    run()
+    main()

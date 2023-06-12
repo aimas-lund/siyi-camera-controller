@@ -16,13 +16,13 @@ def generate_launch_description() -> launch.LaunchDescription:
             executable=_GIMBAL_EXECUTABLE,
             name=_GIMBAL_NODE_NAME,),
 
-        launch_ros.actions.Node(
-            package=_PACKAGE_NAME,
-            executable=_ZOOM_EXECUTABLE,
-            name=_ZOOM_NODE_NAME,),
+        # launch_ros.actions.Node(
+        #     package=_PACKAGE_NAME,
+        #     executable=_ZOOM_EXECUTABLE,
+        #     name=_ZOOM_NODE_NAME,),
 
-        launch_ros.actions.Node(
-            package=_PACKAGE_NAME,
-            executable=_CAMERA_EXECUTABLE,
-            name=_CAMERA_NODE_NAME,)
+        # launch_ros.actions.Node(
+        #     package=_PACKAGE_NAME,
+        #     executable=_CAMERA_EXECUTABLE,
+        #     name=_CAMERA_NODE_NAME,)
   ])

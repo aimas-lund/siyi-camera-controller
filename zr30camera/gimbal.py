@@ -2,10 +2,10 @@ import rclpy
 
 from rclpy.node import Node
 from geometry_msgs.msg import Vector3Stamped
-from sdk.siyi_sdk import SIYISDK
+from siyi_sdk import SIYISDK
 
-_GIMBAL_GET_ATTITUTE_TOPIC = "get_gimbal_attitude"
-_GIMBAL_SET_ATTITUDE_TOPIC = "set_gimbal_attitude"
+_GIMBAL_GET_ATTITUTE_TOPIC = "ZR30/get_gimbal_attitude"
+_GIMBAL_SET_ATTITUDE_TOPIC = "ZR30/set_gimbal_attitude"
 _GIMBAL_NODE_NAME = "gimbal_node"
 _GIMBAL_FRAME_ID = "ZR30_Camera_Gimbal"
 _ZR30_SERVER_IP = "192.168.144.25"
@@ -42,7 +42,9 @@ class GimbalNode(Node):
         msg.header.frame_id = _GIMBAL_FRAME_ID
 
         self.publisher_.publish(msg)
-        self.get_logger().info(f"Gimbal data packet {self.i} published.")
+        if (self.i % 100 == 0):
+            self.get_logger().info(f"Gimbal data packet {self.i} published. Pitch: {pitch}, Yaw: {yaw}")
+
         self.i += 1
 
     def set_attitude_callback(self, msg: Vector3Stamped) -> None:

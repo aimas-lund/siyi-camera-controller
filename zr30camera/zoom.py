@@ -2,7 +2,7 @@ import rclpy
 
 from rclpy.node import Node
 from std_msgs.msg import Float32
-from sdk.siyi_sdk import SIYISDK
+from siyi_sdk import SIYISDK
 
 _GET_ZOOM_TOPIC = "ZR30/get_zoom_level"
 _SET_ZOOM_TOPIC = "ZR30/set_zoom_level"
@@ -33,11 +33,12 @@ class ZoomNode(Node):
         Will use the siyi_sdk to publish the zoom level of the ZR30 Camera.
         """
         msg = Float32()
-
-        msg.data = float(self.camera.getZoomLevel())
+        zoom_level = float(self.camera.getZoomLevel())
+        msg.data = zoom_level
 
         self.publisher_.publish(msg)
-        self.get_logger().info(f"Zoom data packet {self.i} published.")
+        if self.i % 100 == 0:
+            self.get_logger().info(f"Zoom data packet {self.i} published. Zoom level: {zoom_level}")
         self.i += 1
 
     def set_zoom_callback(self, msg: Float32) -> None:

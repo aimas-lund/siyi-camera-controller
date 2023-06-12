@@ -1,3 +1,0 @@
-[submodule "sdk"]
-	path = sdk
-	url = https://github.com/aimas-lund/siyi_sdk_ros2_submodule.git

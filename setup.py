@@ -3,12 +3,11 @@ from glob import glob
 from setuptools import  setup
 
 package_name = 'zr30camera'
-library_name = 'sdk'
 
 setup(
     name=package_name,
     version='0.0.0',
-    packages=[package_name, library_name],
+    packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
@@ -25,9 +24,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'camera = zr30camera.camera:main',
-            'zoom = zr30camera.zoom:main',
-            'gimbal = zr30camera.gimbal:main',
+            'stream = zr30camera.camera_stream:main',
+            'controller = zr30camera.camera_controller:main',
         ],
     },
 )

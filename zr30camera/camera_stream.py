@@ -13,7 +13,7 @@ _CAM_FRAME_ID = "ZR30_Camera_Capture"
 _QUEUE_SIZE = 100
 _PUBLISH_PERIOD_SEC = 0.01
 
-class CameraNode(Node):
+class CameraStreamNode(Node):
     def __init__(self, capture: cv2.VideoCapture, node_name: str =_CAM_NODE_NAME, pub_period: float=_PUBLISH_PERIOD_SEC) -> None:
         super().__init__(node_name)
         self.capture = capture
@@ -47,7 +47,7 @@ def main(args=None):
     capture = cv2.VideoCapture(_CAM_STREAM_URI)
 
     rclpy.init(args=args)
-    camera_publisher = CameraNode(capture=capture)
+    camera_publisher = CameraStreamNode(capture=capture)
 
     rclpy.spin(camera_publisher)
 

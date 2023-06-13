@@ -65,7 +65,7 @@ class CameraControllerNode(Node):
         pitch = msg.vector.y
         yaw = msg.vector.z
         self.get_logger().info(f"Gimbal attitude set to ({pitch}, {yaw}) (pitch, yaw).")
-        self.camera.setGimbalRotation(yaw, pitch)
+        self.camera.setGimbalRotation(yaw, pitch, err_thresh=5.0, kp=4)
 
 
     def get_zoom_callback(self) -> None:

@@ -4,24 +4,24 @@
 ### Install dependencies
 
 Install python dependencies with pip:
-´´´sh
+```sh
 pip3 install -r requirements.txt
-´´´
+```
 
 ### Build ROS2 package
 
 Build with colcon:
-´´´sh
+```sh
 colcon build
-´´´
+```
 
 Source the setup file:
-´´´sh
+```sh
 . install/setup.bash
-´´´
+```
 
 ## Run
 Run the camera controller ROS2 nodes with the launch file:
-´´´sh
+```sh
 ros2 launch zr30camera zr30camera_launch.py
-´´´
+```

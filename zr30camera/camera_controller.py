@@ -113,6 +113,7 @@ def main(args=None):
     node = CameraControllerNode(camera=camera)
     rclpy.spin(node)
 
+    # Shutdown procedures after node is killed
     node.destroy_node()
     rclpy.shutdown()
     camera.disconnect()

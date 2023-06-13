@@ -1,0 +1,3 @@
+# python module implemenation of siyi_sdk.
+# import as "siyi_sdk"
+git+https://github.com/aimas-lund/siyi_sdk_ros2_submodule

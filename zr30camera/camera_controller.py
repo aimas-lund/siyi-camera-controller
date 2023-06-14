@@ -104,22 +104,33 @@ class CameraControllerNode(Node):
         Zoom level: min = 1.0, max = 30.0
 
         Args:
-            zoom: whether to zoom in (zoom = 1) or zoom out (zoom = 0)
+            zoom: zoom level
         """
         cam_zoom = float(self.camera.getZoomLevel())
         print("Initial zoom level", cam_zoom)
 
-        if zoom == 1:
-            print("Zooming in")        
-            val = self.camera.requestZoomIn()
-            sleep(1)
-        elif zoom == -1:
-            print("Zooming out")
-            val = self.camera.requestZoomOut()
-            sleep(1)
+        if zoom < cam_zoom:
+            while zoom < cam_zoom:
+                self.camera.requestZoomOut()
+                cam_zoom = float(self.camera.getZoomLevel())
+        elif zoom > cam_zoom:
+            while zoom > cam_zoom:
+                self.camera.requestZoomIn()
+                cam_zoom = float(self.camera.getZoomLevel())
         else:
-            print("Wrong input to zoom. Input 1 or -1.")
             pass
+
+        # if zoom == 1:
+        #     print("Zooming in")        
+        #     val = self.camera.requestZoomIn()
+        #     sleep(1)
+        # elif zoom == -1:
+        #     print("Zooming out")
+        #     val = self.camera.requestZoomOut()
+        #     sleep(1)
+        # else:
+        #     print("Wrong input to zoom. Input 1 or -1.")
+        #     pass
 
         val = self.camera.requestZoomHold()
         sleep(1)

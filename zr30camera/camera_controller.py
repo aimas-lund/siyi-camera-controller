@@ -95,6 +95,9 @@ class CameraControllerNode(Node):
             msg.data = zoom level
         """
         val = msg.data
+
+        if val == 1.0 or val == 30.0:
+            self._request_zoom(val)
         
         self.camera.setZoomLevel(val)
         self.get_logger().info(f"Zoom level set to {val}.")
@@ -124,6 +127,46 @@ class CameraControllerNode(Node):
         else:
             self.get_logger().error(f"Invalid focus argument {val}.")
             return
+        
+    def _request_zoom(self, zoom) -> None:
+        """
+        Will zoom in or out on the camera and return the zoom level.
+        Zoom level: min = 1.0, max = 30.0
+        Args:
+            zoom: whether to zoom in (zoom = 1) or zoom out (zoom = 0)
+        """
+        cam_zoom = float(self.camera.getZoomLevel())
+        print("Initial zoom level", cam_zoom)
+
+        if zoom < cam_zoom:
+            while zoom < cam_zoom:
+                self.camera.requestZoomOut()
+                cam_zoom = float(self.camera.getZoomLevel())
+        elif zoom > cam_zoom:
+            while zoom > cam_zoom:
+                self.camera.requestZoomIn()
+                cam_zoom = float(self.camera.getZoomLevel())
+        else:
+            pass
+
+        # if zoom == 1:
+        #     print("Zooming in")        
+        #     val = self.camera.requestZoomIn()
+        #     sleep(1)
+        # elif zoom == -1:
+        #     print("Zooming out")
+        #     val = self.camera.requestZoomOut()
+        #     sleep(1)
+        # else:
+        #     print("Wrong input to zoom. Input 1 or -1.")
+        #     pass
+
+        val = self.camera.requestZoomHold()
+        sleep(1)
+        cam_zoom = float(self.camera.getZoomLevel())
+        sleep(1)
+
+        print("Achieved zoom level: ", cam_zoom)
 
 
 def main(args=None):

@@ -172,6 +172,37 @@ class CameraControllerNode(Node):
         print("Achieved zoom level: ", cam_zoom)
 
 
+    def awesome_set_zoom_function(self, zoom) -> None:
+        """
+        Will zoom in or out on the camera and return the zoom level.
+        Zoom level: min = 1.0, max = 30.0
+
+        Args:
+            zoom: whether to zoom in (zoom = 1) or zoom out (zoom = 0)
+        """
+        cam_zoom = float(self.camera.getZoomLevel())
+        print("Initial zoom level", cam_zoom)
+
+        if zoom == 1:
+            print("Zooming in")        
+            val = self.camera.requestZoomIn()
+            sleep(1)
+        elif zoom == -1:
+            print("Zooming out")
+            val = self.camera.requestZoomOut()
+            sleep(1)
+        else:
+            print("Wrong input to zoom. Input 1 or -1.")
+            pass
+
+        val = self.camera.requestZoomHold()
+        sleep(1)
+        cam_zoom = float(self.camera.getZoomLevel())
+        sleep(1)
+
+        print("Achieved zoom level: ", cam_zoom)
+
+
 def main(args=None):
     camera = SIYISDK(server_ip=_ZR30_SERVER_IP, port=_ZR30_SERVER_PORT)
     camera.connect()

@@ -101,8 +101,8 @@ class CameraControllerNode(Node):
         
         self.camera.setZoomLevel(val)
         self.get_logger().info(f"Zoom level set to {val}.")
-        
-        
+
+
     def set_focus_callback(self, msg: Int8) -> None:
         """
         Will listen for Int8 messages to toggle the focus of the camera.
@@ -128,7 +128,7 @@ class CameraControllerNode(Node):
         else:
             self.get_logger().error(f"Invalid focus argument {val}.")
             return
-          
+        
     def awesome_set_zoom_function(self, zoom) -> None:
         """
         Will zoom in or out on the camera and return the zoom level.

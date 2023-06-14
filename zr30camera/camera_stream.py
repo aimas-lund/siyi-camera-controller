@@ -43,6 +43,7 @@ class CameraStreamNode(Node):
         self.publisher.publish(msg)
         self.i += 1
 
+
 def main(args=None):
     capture = cv2.VideoCapture(_CAM_STREAM_URI)
 

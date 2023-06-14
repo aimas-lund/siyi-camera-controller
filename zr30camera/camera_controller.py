@@ -89,20 +89,9 @@ class CameraControllerNode(Node):
             msg.data = zoom level
         """
         val = msg.data
-        self.awesome_set_zoom_function(val)
+        
+        self.camera.setZoomLevel(val)
         self.get_logger().info(f"Zoom level set to {val}.")
-
-
-    def awesome_set_zoom_function(self, zoom_level: float) -> None:
-        val = self.camera.requestZoomIn()
-        sleep(1)
-        val = self.camera.requestZoomHold()
-        sleep(1)
-
-        val = self.camera.requestZoomOut()
-        sleep(1)
-        val = self.camera.requestZoomHold()
-        sleep(1)
 
 
 def main(args=None):

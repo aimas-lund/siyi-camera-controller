@@ -128,14 +128,15 @@ class CameraControllerNode(Node):
         else:
             self.get_logger().error(f"Invalid focus argument {val}.")
             return
-        
+    
+    
     def awesome_set_zoom_function(self, zoom) -> None:
         """
         Will zoom in or out on the camera and return the zoom level.
         Zoom level: min = 1.0, max = 30.0
 
         Args:
-            zoom: zoom level
+            zoom: whether to zoom in (zoom = 1) or zoom out (zoom = 0)
         """
         cam_zoom = float(self.camera.getZoomLevel())
         print("Initial zoom level", cam_zoom)

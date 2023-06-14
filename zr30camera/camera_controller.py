@@ -17,6 +17,8 @@ _ZR30_SERVER_IP = "192.168.144.25"
 _ZR30_SERVER_PORT = 37260
 _PUBLISH_PERIOD_SEC = 0.05
 _QUEUE_SIZE = 100
+_GIMBAL_KP = 4
+_GIMBAL_ERR_THRESH = 5.0
 
 class CameraControllerNode(Node):
     def __init__(self, camera: SIYISDK, node_name: str =_CONTROLLER_NODE_NAME, pub_period: float=_PUBLISH_PERIOD_SEC) -> None:
@@ -65,7 +67,7 @@ class CameraControllerNode(Node):
         pitch = msg.vector.y
         yaw = msg.vector.z
         self.get_logger().info(f"Gimbal attitude set to ({pitch}, {yaw}) (pitch, yaw).")
-        self.camera.setGimbalRotation(yaw, pitch, err_thresh=5.0, kp=4)
+        self.camera.setGimbalRotation(yaw, pitch, err_thresh=_GIMBAL_ERR_THRESH, kp=_GIMBAL_KP)
 
 
     def get_zoom_callback(self) -> None:

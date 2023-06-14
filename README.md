@@ -28,6 +28,8 @@ Run the camera controller and camera stream ROS2 nodes with the launch file:
 ros2 launch zr30camera zr30camera_launch.py
 ```
 
+If the camera is connected to the network, the camera controller node will automatically connect to the camera and start the stream. If the camera <b>is not</b> connected to the network, the camera controller will timeout after 5 seconds. If the camera is physically connected to the computer, make sure so be a part of the same network as the camera (192.168.144.xxx).
+
 # Control the camera actuators
 The ZR30 camera can be controlled via the topics starting with ```/ZR30/set_```. This can either be done with a custom node that publishes, or built-in ```ros2``` functionalities.
 

@@ -2,19 +2,22 @@ import rclpy
 
 from rclpy.node import Node
 from geometry_msgs.msg import Vector3Stamped
-from std_msgs.msg import Float32
+from std_msgs.msg import Float32, Int8
 from siyi_sdk.siyi_sdk import SIYISDK
 from time import sleep
 
-_GIMBAL_GET_ATTITUTE_TOPIC = "ZR30/get_gimbal_attitude"
-_GIMBAL_SET_ATTITUDE_TOPIC = "ZR30/set_gimbal_attitude"
+_GET_GIMBAL_ATTITUTE_TOPIC = "ZR30/get_gimbal_attitude"
 _GET_ZOOM_TOPIC = "ZR30/get_zoom_level"
+_SET_GIMBAL_ATTITUDE_TOPIC = "ZR30/set_gimbal_attitude"
 _SET_ZOOM_TOPIC = "ZR30/set_zoom_level"
+_SET_FOCUS_TOPIC = "ZR30/set_focus"
+
 _CONTROLLER_NODE_NAME = "zr30_controller_node"
 _GIMBAL_FRAME_ID = "ZR30_Camera_Gimbal"
 
 _ZR30_SERVER_IP = "192.168.144.25"
 _ZR30_SERVER_PORT = 37260
+
 _PUBLISH_PERIOD_SEC = 0.05
 _QUEUE_SIZE = 100
 _GIMBAL_KP = 4
@@ -26,12 +29,13 @@ class CameraControllerNode(Node):
         self.camera = camera
         
         # define get attribute topics
-        self.att_publisher_ = self.create_publisher(Vector3Stamped, _GIMBAL_GET_ATTITUTE_TOPIC, _QUEUE_SIZE)
+        self.att_publisher_ = self.create_publisher(Vector3Stamped, _GET_GIMBAL_ATTITUTE_TOPIC, _QUEUE_SIZE)
         self.zoom_publisher_ = self.create_publisher(Float32, _GET_ZOOM_TOPIC, _QUEUE_SIZE)
 
         # define set attribute topics
-        self.att_subscriber_ = self.create_subscription(Vector3Stamped, _GIMBAL_SET_ATTITUDE_TOPIC, self.set_attitude_callback, 10)
+        self.att_subscriber_ = self.create_subscription(Vector3Stamped, _SET_GIMBAL_ATTITUDE_TOPIC, self.set_attitude_callback, 10)
         self.zoom_subscriber_ = self.create_subscription(Float32, _SET_ZOOM_TOPIC, self.set_zoom_callback, 10)
+        self.focus_subscriber_ = self.create_subscription(Int8, _SET_FOCUS_TOPIC, self.set_focus_callback, 10)
 
         # define publishing frequency and callback function
         self.timer_ = self.create_timer(pub_period, self.get_attitude_callback)
@@ -94,6 +98,32 @@ class CameraControllerNode(Node):
         
         self.camera.setZoomLevel(val)
         self.get_logger().info(f"Zoom level set to {val}.")
+
+    def set_focus_callback(self, msg: Int8) -> None:
+        """
+        Will listen for Int8 messages to toggle the focus of the camera.
+
+        Args:
+            msg (Int8): The message containing the focus level to set.
+            msg.data = -1 (close shot), 0 (stop focus), 1 (far shot), 2 (auto)
+        """
+        val = msg.data
+        
+        if (val == 2):
+            self.camera.requestAutoFocus()
+            self.get_logger().info(f"Auto focus requested.")
+        elif(val == 1):
+            self.camera.requestLongFocus()
+            self.get_logger().info(f"Long focus requested.")
+        elif(val == 0):
+            self.camera.requestFocusHold()
+            self.get_logger().info(f"Focus hold requested.")
+        elif(val == -1):
+            self.camera.requestCloseFocus()
+            self.get_logger().info(f"Close focus requested.")
+        else:
+            self.get_logger().error(f"Invalid focus argument {val}.")
+            return
 
 
 def main(args=None):

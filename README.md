@@ -45,11 +45,17 @@ NOTE: the ```--once``` argument is important, as the camera zoom will otherwise 
 
 ### Zoom control
 
-- ```/ZR30/set_zoom_level```, accepts ```std_msgs/msg/Float32``` type messages.
+- ```/ZR30/set_zoom_level```, accepts ```std_msgs/msg/Float32```-type messages.
 
 ### Gimbal control
 
 - ```/ZR30/set_gimbal_attitude```, accepts ```geometry_msgs/msg/Vector3Stamped```-type messages, where x = roll, y = pitch and z = yaw.
+
+### Focus control
+
+- ```/ZR30/set_focus_mode```, accepts ```std_msgs/msg/Int8```-type messages, where -1 = close focus, 0 = hold focus, 1 = far focus, 2 = auto focus.
+
+<b>NOTE:</b> Absolute focus is implemented but not supported, so it is not recommended to use this mode. Dialogue with the camera manufacturer is ongoing.
 
 
 # Camera stream

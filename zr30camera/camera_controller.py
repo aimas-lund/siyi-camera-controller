@@ -6,22 +6,22 @@ from std_msgs.msg import Float32, Int8
 from siyi_sdk.siyi_sdk import SIYISDK
 from time import sleep
 
-_GET_GIMBAL_ATTITUTE_TOPIC = "ZR30/get_gimbal_attitude"
-_GET_ZOOM_TOPIC = "ZR30/get_zoom_level"
-_SET_GIMBAL_ATTITUDE_TOPIC = "ZR30/set_gimbal_attitude"
-_SET_ZOOM_TOPIC = "ZR30/set_zoom_level"
-_SET_FOCUS_TOPIC = "ZR30/set_focus"
+_GET_GIMBAL_ATTITUTE_TOPIC =    "ZR30/get_gimbal_attitude"
+_GET_ZOOM_TOPIC =               "ZR30/get_zoom_level"
+_SET_GIMBAL_ATTITUDE_TOPIC =    "ZR30/set_gimbal_attitude"
+_SET_ZOOM_TOPIC =               "ZR30/set_zoom_level"
+_SET_FOCUS_TOPIC =              "ZR30/set_focus"
 
-_CONTROLLER_NODE_NAME = "zr30_controller_node"
-_GIMBAL_FRAME_ID = "ZR30_Camera_Gimbal"
+_CONTROLLER_NODE_NAME =         "zr30_controller_node"
+_GIMBAL_FRAME_ID =              "ZR30_Camera_Gimbal"
 
-_ZR30_SERVER_IP = "192.168.144.25"
-_ZR30_SERVER_PORT = 37260
+_ZR30_SERVER_IP =               "192.168.144.25"
+_ZR30_SERVER_PORT =             37260
 
-_PUBLISH_PERIOD_SEC = 0.05
-_QUEUE_SIZE = 100
-_GIMBAL_KP = 4
-_GIMBAL_ERR_THRESH = 5.0
+_PUBLISH_PERIOD_SEC =           0.05
+_QUEUE_SIZE =                   100
+_GIMBAL_KP =                    4
+_GIMBAL_ERR_THRESH =            5.0
 
 class CameraControllerNode(Node):
     def __init__(self, camera: SIYISDK, node_name: str =_CONTROLLER_NODE_NAME, pub_period: float=_PUBLISH_PERIOD_SEC) -> None:

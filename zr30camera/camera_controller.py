@@ -155,8 +155,14 @@ class CameraControllerNode(Node):
 
         # if val == 1.0 or val == 30.0:
         #     self._request_zoom(val)
-        
-        self.camera.setZoomLevel(val)
+        # self.camera.setZoomLevel(val)
+
+        # transform float to int and decimal input for siyi_sdk
+        val = round(val, 1) # round to 1 decimal
+        int_part = int(val)
+        dec_part = int((val - int_part) * 10)
+
+        self.camera.requestAbsZoom(int_part, dec_part)
         self.get_logger().info(f"Zoom level set to {val}.")
 
     def set_focus_callback(self, msg: Int8) -> None:

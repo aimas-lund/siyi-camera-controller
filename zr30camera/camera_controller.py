@@ -1,6 +1,7 @@
 import rclpy
 
 from rclpy.node import Node
+from rclpy.executors import MultiThreadedExecutor
 from geometry_msgs.msg import Vector3Stamped
 from std_msgs.msg import Float32, Int8
 from siyi_sdk.siyi_sdk import SIYISDK
@@ -183,11 +184,18 @@ def main(args=None):
 
     rclpy.init(args=args)
     node = CameraControllerNode(camera=camera)
-    rclpy.spin(node)
+    executor = MultiThreadedExecutor()
+    executor.add_node(node)
 
-    node.destroy_node()
-    rclpy.shutdown()
-    camera.disconnect()
+    try:
+        executor.spin()
+    except KeyboardInterrupt:
+        node.get_logger().warn("Keyboard Interrupt (SIGINT) detected. Manual shutdown...")
+    finally:
+        executor.shutdown()
+        node.destroy_node()
+        rclpy.shutdown()
+        camera.disconnect()
 
 if __name__ == "__main__":
     main()

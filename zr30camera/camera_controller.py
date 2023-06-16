@@ -78,6 +78,9 @@ class CameraControllerNode(Node):
             callback_group=self.subscribers_callback_group
         )
 
+        # Initialize zoom level
+        self.camera.requestZoomHold()
+
         # define publishing frequency and callback function
         self.timer_ = self.create_timer(
             pub_period, 
@@ -150,8 +153,8 @@ class CameraControllerNode(Node):
         """
         val = msg.data
 
-        if val == 1.0 or val == 30.0:
-            self._request_zoom(val)
+        # if val == 1.0 or val == 30.0:
+        #     self._request_zoom(val)
         
         self.camera.setZoomLevel(val)
         self.get_logger().info(f"Zoom level set to {val}.")

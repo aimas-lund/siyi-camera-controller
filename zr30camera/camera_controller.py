@@ -38,8 +38,16 @@ class CameraControllerNode(Node):
         self.focus_subscriber_ = self.create_subscription(Int8, _SET_FOCUS_TOPIC, self.set_focus_callback, 10)
 
         # define publishing frequency and callback function
-        self.timer_ = self.create_timer(pub_period, self.get_attitude_callback)
+        self.timer_ = self.create_timer(pub_period, self.publish_data)
         self.i = 0
+
+    def publish_data(self) -> None:
+        """
+        Will publish the current gimbal attitude and zoom level.
+        """
+        self.get_attitude_callback()
+        self.get_zoom_callback()
+        self.i += 1
 
     def get_attitude_callback(self) -> None:
         """
@@ -83,7 +91,7 @@ class CameraControllerNode(Node):
         msg.data = zoom_level
 
         self.zoom_publisher_.publish(msg)
-        self.i += 1
+        
 
 
     def set_zoom_callback(self, msg: Float32) -> None:

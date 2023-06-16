@@ -231,12 +231,15 @@ def main(args=None):
     node = CameraControllerNode(camera=camera)
 
     executor = MultiThreadedExecutor(num_threads=_THREAD_COUNT)
-    executor.add_node(node.publishers_callback_group)
-    executor.add_node(node.subscribers_callback_group)
+    executor.add_node(node)
 
-    executor.spin()
+    try:
+        node.get_logger().info("Camera controller node started.")
+        executor.spin()
+    except KeyboardInterrupt:
+        node.get_logger().info("Camera controller node stopped manually.")
     
-    executor.shutdown(_SHUTDOWN_TIMEOUT_SEC)
+    # executor.shutdown(_SHUTDOWN_TIMEOUT_SEC)
     node.destroy_node()
     rclpy.shutdown()
     camera.disconnect()

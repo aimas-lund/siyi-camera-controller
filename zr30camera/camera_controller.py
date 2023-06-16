@@ -37,6 +37,9 @@ class CameraControllerNode(Node):
         self.zoom_subscriber_ = self.create_subscription(Float32, _SET_ZOOM_TOPIC, self.set_zoom_callback, 10)
         self.focus_subscriber_ = self.create_subscription(Int8, _SET_FOCUS_TOPIC, self.set_focus_callback, 10)
 
+        # Initialize zoom level
+        self.camera.requestZoomHold()
+
         # define publishing frequency and callback function
         self.timer_ = self.create_timer(pub_period, self.publish_data)
         self.i = 0
@@ -104,8 +107,8 @@ class CameraControllerNode(Node):
         """
         val = msg.data
 
-        if val == 1.0 or val == 30.0:
-            self._request_zoom(val)
+        # if val == 1.0 or val == 30.0:
+        #     self._request_zoom(val)
         
         self.camera.setZoomLevel(val)
         self.get_logger().info(f"Zoom level set to {val}.")

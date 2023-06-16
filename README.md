@@ -9,6 +9,8 @@ pip3 install -r requirements.txt
 One of the dependencies is a modified version of the ```siyi_sdk```, which can be accessed in this repository:
 ```https://github.com/aimas-lund/siyi_sdk_ros2_submodule```. This repo is modified to handle zoom functionalities of the ZR30 camera specifically.
 
+<b>NOTE: The camera firmware must be kept up-to-date as older firmware might not include functionalities such as Absolute Zoom.</b>
+
 
 ## Build ROS2 package
 

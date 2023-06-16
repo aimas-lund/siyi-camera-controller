@@ -2,6 +2,7 @@ import rclpy
 
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
+from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
 from geometry_msgs.msg import Vector3Stamped
 from std_msgs.msg import Float32, Int8
 from siyi_sdk.siyi_sdk import SIYISDK
@@ -24,22 +25,66 @@ _QUEUE_SIZE =                   100
 _GIMBAL_KP =                    4
 _GIMBAL_ERR_THRESH =            5.0
 
+# EXECUTOR PARAMETERS
+_THREAD_COUNT =                 2
+_SHUTDOWN_TIMEOUT_SEC =         3.0
+
 class CameraControllerNode(Node):
     def __init__(self, camera: SIYISDK, node_name: str =_CONTROLLER_NODE_NAME, pub_period: float=_PUBLISH_PERIOD_SEC) -> None:
         super().__init__(node_name)
         self.camera = camera
+
+        # define callback groups
+        self.publishers_callback_group = MutuallyExclusiveCallbackGroup()
+        self.subscribers_callback_group = MutuallyExclusiveCallbackGroup()
         
         # define get attribute topics
-        self.att_publisher_ = self.create_publisher(Vector3Stamped, _GET_GIMBAL_ATTITUTE_TOPIC, _QUEUE_SIZE)
-        self.zoom_publisher_ = self.create_publisher(Float32, _GET_ZOOM_TOPIC, _QUEUE_SIZE)
+        self.att_publisher_ = self.create_publisher(
+            Vector3Stamped, 
+            _GET_GIMBAL_ATTITUTE_TOPIC, 
+            _QUEUE_SIZE, 
+            callback_group=self.publishers_callback_group
+        )
+
+        self.zoom_publisher_ = self.create_publisher(
+            Float32, 
+            _GET_ZOOM_TOPIC, 
+            _QUEUE_SIZE, 
+            callback_group=self.publishers_callback_group
+        )
 
         # define set attribute topics
-        self.att_subscriber_ = self.create_subscription(Vector3Stamped, _SET_GIMBAL_ATTITUDE_TOPIC, self.set_attitude_callback, 10)
-        self.zoom_subscriber_ = self.create_subscription(Float32, _SET_ZOOM_TOPIC, self.set_zoom_callback, 10)
-        self.focus_subscriber_ = self.create_subscription(Int8, _SET_FOCUS_TOPIC, self.set_focus_callback, 10)
+        self.att_subscriber_ = self.create_subscription(
+            Vector3Stamped,
+            _SET_GIMBAL_ATTITUDE_TOPIC, 
+            self.set_attitude_callback, 
+            10, 
+            callback_group=self.subscribers_callback_group
+        )
+
+        self.zoom_subscriber_ = self.create_subscription(
+            Float32,
+            _SET_ZOOM_TOPIC, 
+            self.set_zoom_callback, 
+            10,
+            callback_group=self.subscribers_callback_group
+        )
+
+        self.focus_subscriber_ = self.create_subscription(
+            Int8, 
+            _SET_FOCUS_TOPIC, 
+            self.set_focus_callback, 
+            10,
+            callback_group=self.subscribers_callback_group
+        )
 
         # define publishing frequency and callback function
-        self.timer_ = self.create_timer(pub_period, self.publish_data)
+        self.timer_ = self.create_timer(
+            pub_period, 
+            self.publish_data, 
+            callback_group=self.publishers_callback_group
+        )
+
         self.i = 0
 
     def publish_data(self) -> None:
@@ -184,18 +229,17 @@ def main(args=None):
 
     rclpy.init(args=args)
     node = CameraControllerNode(camera=camera)
-    executor = MultiThreadedExecutor()
-    executor.add_node(node)
 
-    try:
-        executor.spin()
-    except KeyboardInterrupt:
-        node.get_logger().warn("Keyboard Interrupt (SIGINT) detected. Manual shutdown...")
-    finally:
-        executor.shutdown()
-        node.destroy_node()
-        rclpy.shutdown()
-        camera.disconnect()
+    executor = MultiThreadedExecutor(num_threads=_THREAD_COUNT)
+    executor.add_node(node.publishers_callback_group)
+    executor.add_node(node.subscribers_callback_group)
+
+    executor.spin()
+    
+    executor.shutdown(_SHUTDOWN_TIMEOUT_SEC)
+    node.destroy_node()
+    rclpy.shutdown()
+    camera.disconnect()
 
 if __name__ == "__main__":
     main()

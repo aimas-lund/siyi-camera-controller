@@ -104,7 +104,7 @@ class CameraControllerNode(Node):
         """
         msg = Vector3Stamped()
 
-        roll, pitch, yaw = self.camera.getAttitude()
+        yaw, pitch, roll = self.camera.getAttitude()
         msg.vector.x = roll
         msg.vector.y = pitch
         msg.vector.z = yaw

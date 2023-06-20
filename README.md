@@ -38,7 +38,7 @@ The ZR30 camera can be controlled via the topics starting with ```/ZR30/set_```.
 For instance, setting the camera zoom level to 20x can be done with the following command:
 
 ```bash
-ros2 topic pub --once /ZR30/set_zoom_level std_msgs/msg/Float32 'data: 20'
+ros2 topic pub --once /ZR30/set_zoom_level std_msgs/msg/Float32 'data: 20.0'
 ```
 
 NOTE: the ```--once``` argument is important, as the camera zoom will otherwise camera controller node will hang.
@@ -49,15 +49,29 @@ NOTE: the ```--once``` argument is important, as the camera zoom will otherwise 
 
 - ```/ZR30/set_zoom_level```, accepts ```std_msgs/msg/Float32```-type messages.
 
+Control message example:
+
+```bash
+ros2 topic pub --once /ZR30/set_zoom_level std_msgs/msg/Float32 'data: 20.0'
+```
+
 ### Gimbal control
 
 - ```/ZR30/set_gimbal_attitude```, accepts ```geometry_msgs/msg/Vector3Stamped```-type messages, where x = roll, y = pitch and z = yaw.
+
+Control message example:
+```bash
+ros2 topic pub --once ZR30/set_gimbal_attitude geometry_msgs/msg/Vector3Stamped "{header: {stamp: {sec: 0, nanosec: 0}, frame_id: 'base'}, vector: {x: 0.0, y: 0.0, z: 0.0}}"
+```
 
 ### Focus control
 
 - ```/ZR30/set_focus_mode```, accepts ```std_msgs/msg/Int8```-type messages, where -1 = close focus, 0 = hold focus, 1 = far focus, 2 = auto focus.
 
-<b>NOTE:</b> Absolute focus is implemented but not supported, so it is not recommended to use this mode. Dialogue with the camera manufacturer is ongoing.
+Control message example:
+```bash
+ros2 topic pub --once /ZR30/set_zoom_level std_msgs/msg/Int8 'data: 2'
+```
 
 
 # Camera stream

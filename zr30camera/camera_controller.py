@@ -212,19 +212,11 @@ class CameraControllerNode(Node):
         else:
             pass
 
-        # if zoom == 1:
-        #     print("Zooming in")        
-        #     val = self.camera.requestZoomIn()
-        #     sleep(1)
-        # elif zoom == -1:
-        #     print("Zooming out")
-        #     val = self.camera.requestZoomOut()
-        #     sleep(1)
-        # else:
-        #     print("Wrong input to zoom. Input 1 or -1.")
-        #     pass
-
-        val = self.camera.requestZoomHold()
+        msg_flag = self.camera.requestZoomHold()
+        if (not msg_flag):
+            print("Zoom hold failed")
+            return
+        
         sleep(1)
         cam_zoom = float(self.camera.getZoomLevel())
         sleep(1)

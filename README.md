@@ -8,7 +8,7 @@ Following functionalities are implemented:
 - Camera manual- and automatic focus control (/msg/Int8 topic)
 
 # Setup the package
-This package assumes the following setup:
+This package is tested with the following setup:
 - Ubuntu 22.04
 - ROS2 Humble
 - Python 3.9 (or higher)

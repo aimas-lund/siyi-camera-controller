@@ -88,7 +88,7 @@ ros2 topic pub --once /ZR30/set_zoom_level std_msgs/msg/Float32 'data: 20.0'
 
 ### Gimbal control
 
-- ```/ZR30/set_gimbal_attitude```, accepts ```geometry_msgs/msg/Vector3Stamped```-type messages, where x = roll, y = pitch and z = yaw. The input value units are in degrees.
+- ```/ZR30/set_gimbal_attitude```, accepts ```geometry_msgs/msg/Vector3Stamped```-type messages, where x = roll, y = pitch and z = yaw. <b>The input value units are in degrees</b>.
 
 Control message example:
 ```bash
@@ -107,3 +107,4 @@ ros2 topic pub --once /ZR30/set_zoom_level std_msgs/msg/Int8 'data: 2'
 
 # Camera stream
 The video stream from the UDP endpoint is parsed to the ```/ZR30/camera_stream``` topic in the ```sensor_msgs/msg/Image``` format.
+Alternatively, to obtain the raw RTSP feed, remove the camera stream from the launch file, and obtain the video feed from ```192.168.144.25:8554/main.264```.

@@ -128,7 +128,13 @@ class CameraControllerNode(Node):
         pitch = msg.vector.y
         yaw = msg.vector.z
         self.get_logger().info(f"Gimbal attitude set to ({pitch}, {yaw}) (pitch, yaw).")
-        self.camera.setGimbalRotation(yaw, pitch, err_thresh=_GIMBAL_ERR_THRESH, kp=_GIMBAL_KP)
+
+        if (pitch == yaw == 0.0):
+            # use requestCenterGimbal command when pitch and yaw is 0, as the firmware controller is more accurate 
+            # than the one implemented in siyi_sdk.
+            self.camera.requestCenterGimbal()
+        else:
+            self.camera.setGimbalRotation(yaw, pitch, err_thresh=_GIMBAL_ERR_THRESH, kp=_GIMBAL_KP)
 
 
     def get_zoom_callback(self) -> None:

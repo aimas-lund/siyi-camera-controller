@@ -97,11 +97,11 @@ ros2 topic pub --once ZR30/set_gimbal_attitude geometry_msgs/msg/Vector3Stamped 
 
 ### Focus control
 
-- ```/ZR30/set_focus_mode```, accepts ```std_msgs/msg/Int8```-type messages, where -1 = close focus, 0 = hold focus, 1 = far focus, 2 = auto focus.
+- ```/ZR30/set_focus```, accepts ```std_msgs/msg/Int8```-type messages, where -1 = close focus, 0 = hold focus, 1 = far focus, 2 = auto focus.
 
 Control message example:
 ```bash
-ros2 topic pub --once /ZR30/set_zoom_level std_msgs/msg/Int8 'data: 2'
+ros2 topic pub --once /ZR30/set_focus std_msgs/msg/Int8 'data: 2'
 ```
 
 

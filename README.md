@@ -1,4 +1,7 @@
 # SIYI ZR30 Camera ROS2 driver
+
+***NOTICE: THIS REPOSITORY IS NOT MAINTAINED***
+
 This repository contains a ROS2 Humble driver for the SIYI ZR30 camera. The driver is based on the SIYI SDK, which can be found here: ```https://github.com/mzahana/siyi_sdk```. The SDK is modified as a python package (see [Install dependencies](#install-dependencies) section).
 
 Following functionalities are implemented:
